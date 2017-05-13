@@ -1,13 +1,13 @@
-# Slack Announcer
+# Eagle Transporter
 
 
-[![Build Status](https://img.shields.io/travis/maael/freshslack.svg?style=flat-square)](https://travis-ci.org/maael/freshslack)
-[![Code Climate](https://img.shields.io/codeclimate/github/maael/freshslack.svg?style=flat-square)](https://codeclimate.com/github/maael/freshslack)
+[![Build Status](https://img.shields.io/travis/maael/eagle-transporter.svg?style=flat-square)](https://travis-ci.org/maael/eagle-transporter)
+[![Code Climate](https://img.shields.io/codeclimate/github/maael/eagle-transporter.svg?style=flat-square)](https://codeclimate.com/github/maael/eagle-transporter)
 
 ## Setup
-1. Clone the project with `git clone https://github.com/maael/freshslack.git`
-2. Check node version is 6.0.0+. If not swap node version.
-3. Check npm version is 2+. 3 can be a bit slow. (TODO: Yarn? npm 4+?)
+1. Clone the project with `git clone https://github.com/maael/eagle-transporter.git`
+2. Check node version is 7.0.0+. If not swap node version.
+3. Check npm version is 4+. (TODO: Yarn? npm 4+?)
 4. `npm install`
 
 You should now be able to run `npm start` and see the application at `http://localhost:4242/` in your browser.
