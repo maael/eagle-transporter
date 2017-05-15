@@ -32,3 +32,6 @@ Thumbs.db
 
 # Bundled js
 public/js/bundle.js
+
+# Generated css
+public/css
