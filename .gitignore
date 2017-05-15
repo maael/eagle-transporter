@@ -29,3 +29,6 @@ package_modules
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Bundled js
+public/js/bundle.js
