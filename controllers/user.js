@@ -260,9 +260,9 @@ exports.resetPost = function (req, res, next) {
         }
       })
       var mailOptions = {
-        from: 'support@yourdomain.com',
+        from: 'support@eagletransporter.com',
         to: user.email,
-        subject: 'Your Mega Boilerplate password has been changed',
+        subject: 'Your Eagle Transporter password has been changed',
         text: 'Hello,\n\n' +
         'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       }
