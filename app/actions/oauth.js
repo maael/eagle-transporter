@@ -5,10 +5,10 @@ import cookie from 'react-cookie'
 import { browserHistory } from 'react-router'
 
 // Sign in with Twitter
-export function twitterLogin () {
+export function twitterLogin (config) {
   const twitter = {
-    url: 'http://localhost:3000/auth/twitter',
-    redirectUri: 'http://localhost:3000/auth/twitter/callback',
+    url: `${config.host}:${config.port}auth/twitter`,
+    redirectUri: `${config.host}:${config.port}/auth/twitter/callback`,
     authorizationUrl: 'https://api.twitter.com/oauth/authenticate'
   }
 
@@ -24,11 +24,11 @@ export function twitterLogin () {
 }
 
 // Sign in with Google
-export function googleLogin () {
+export function googleLogin (config) {
   const google = {
-    url: 'http://localhost:3000/auth/google',
+    url: `${config.host}:${config.port}/auth/google`,
     clientId: '814958990796-p1centjebv1k0htp3am05tfg5k10nl0k.apps.googleusercontent.com',
-    redirectUri: 'http://localhost:3000/auth/google/callback',
+    redirectUri: `${config.host}:${config.port}/auth/google/callback`,
     authorizationUrl: 'https://accounts.google.com/o/oauth2/auth',
     scope: 'openid profile email',
     width: 452,
@@ -46,13 +46,13 @@ export function googleLogin () {
 }
 
 // Sign in with Github
-export function githubLogin () {
+export function githubLogin (config) {
   const github = {
-    url: 'http://localhost:3000/auth/github',
-    clientId: 'c8d5bf482c0ece46fa1a',
-    redirectUri: 'http://localhost:3000/auth/github/callback',
+    url: `${config.host}:${config.port}/auth/github`,
+    clientId: '582f15ee00326794900b',
+    redirectUri: `${config.host}:${config.port}/auth/github/callback`,
     authorizationUrl: 'https://github.com/login/oauth/authorize',
-    scope: 'user:email profile repo',
+    scope: 'user:email profile',
     width: 452,
     height: 633
   }

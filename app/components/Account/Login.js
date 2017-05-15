@@ -2,8 +2,10 @@ import React from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { login } from '../../actions/auth'
-import { facebookLogin, twitterLogin, googleLogin, vkLogin, githubLogin } from '../../actions/oauth'
+import { twitterLogin, googleLogin, githubLogin } from '../../actions/oauth'
 import Messages from '../Messages'
+
+const config = require('../../config.json')
 
 class Login extends React.Component {
   constructor (props) {
@@ -20,24 +22,16 @@ class Login extends React.Component {
     this.props.dispatch(login(this.state.email, this.state.password))
   }
 
-  handleFacebook () {
-    this.props.dispatch(facebookLogin())
-  }
-
   handleTwitter () {
-    this.props.dispatch(twitterLogin())
+    this.props.dispatch(twitterLogin(config))
   }
 
   handleGoogle () {
-    this.props.dispatch(googleLogin())
-  }
-
-  handleVk () {
-    this.props.dispatch(vkLogin())
+    this.props.dispatch(googleLogin(config))
   }
 
   handleGithub () {
-    this.props.dispatch(githubLogin())
+    this.props.dispatch(githubLogin(config))
   }
 
   render () {
