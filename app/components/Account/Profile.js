@@ -10,9 +10,7 @@ class Profile extends React.Component {
     this.state = {
       email: props.user.email,
       name: props.user.name,
-      gender: props.user.gender,
       location: props.user.location,
-      website: props.user.website,
       gravatar: props.user.gravatar,
       password: '',
       confirm: ''
@@ -71,15 +69,8 @@ class Profile extends React.Component {
           <input type='email' name='email' id='email' value={this.state.email} onChange={this.handleChange.bind(this)} />
           <label htmlFor='name'>Name</label>
           <input type='text' name='name' id='name' value={this.state.name} onChange={this.handleChange.bind(this)} />
-          <label>Gender</label>
-          <input type='radio' name='gender' id='male' value='male' checked={this.state.gender === 'male'} onChange={this.handleChange.bind(this)} />
-          <label htmlFor='male'>Male</label>
-          <input type='radio' name='gender' id='female' value='female' checked={this.state.gender === 'female'} onChange={this.handleChange.bind(this)} />
-          <label htmlFor='female'>Female</label>
           <label htmlFor='location'>Location</label>
           <input type='text' name='location' id='location' value={this.state.location} onChange={this.handleChange.bind(this)} />
-          <label htmlFor='website'>Website</label>
-          <input type='text' name='website' id='website' value={this.state.website} onChange={this.handleChange.bind(this)} />
           <label>Gravatar</label>
           <img src={this.state.gravatar} className='gravatar' width='100' height='100' />
           <button type='submit'>Update Profile</button>

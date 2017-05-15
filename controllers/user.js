@@ -117,9 +117,7 @@ exports.accountPut = function (req, res, next) {
     } else {
       user.email = req.body.email
       user.name = req.body.name
-      user.gender = req.body.gender
       user.location = req.body.location
-      user.website = req.body.website
     }
     user.save(function (err) {
       if ('password' in req.body) {
@@ -148,17 +146,11 @@ exports.accountDelete = function (req, res, next) {
 exports.unlink = function (req, res, next) {
   User.findById(req.user.id, function (err, user) {
     switch (req.params.provider) {
-      case 'facebook':
-        user.facebook = undefined
-        break
       case 'google':
         user.google = undefined
         break
       case 'twitter':
         user.twitter = undefined
-        break
-      case 'vk':
-        user.vk = undefined
         break
       case 'github':
         user.github = undefined
@@ -314,7 +306,6 @@ exports.authGoogle = function (req, res) {
           }
           user = req.user
           user.name = user.name || profile.name
-          user.gender = profile.gender
           user.picture = user.picture || profile.picture.replace('sz=50', 'sz=200')
           user.location = user.location || profile.location
           user.google = profile.sub
@@ -331,7 +322,6 @@ exports.authGoogle = function (req, res) {
           user = new User({
             name: profile.name,
             email: profile.email,
-            gender: profile.gender,
             picture: profile.picture.replace('sz=50', 'sz=200'),
             location: profile.location,
             google: profile.sub
