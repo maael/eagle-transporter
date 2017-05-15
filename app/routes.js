@@ -9,6 +9,7 @@ import Signup from './components/Account/Signup'
 import Profile from './components/Account/Profile'
 import Forgot from './components/Account/Forgot'
 import Reset from './components/Account/Reset'
+import TransportersList from './components/Transporters/List'
 
 export default function getRoutes (store) {
   const ensureAuthenticated = (nextState, replace) => {
@@ -35,6 +36,9 @@ export default function getRoutes (store) {
       <Route path='/account' component={Profile} onEnter={ensureAuthenticated} onLeave={clearMessages} />
       <Route path='/forgot' component={Forgot} onEnter={skipIfAuthenticated} onLeave={clearMessages} />
       <Route path='/reset/:token' component={Reset} onEnter={skipIfAuthenticated} onLeave={clearMessages} />
+      <Route path='/transporters' onEnter={ensureAuthenticated}>
+        <IndexRoute component={TransportersList} onLeave={clearMessages} />
+      </Route>
       <Route path='*' component={NotFound} onLeave={clearMessages} />
     </Route>
   )
