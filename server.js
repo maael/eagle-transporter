@@ -12,6 +12,8 @@ var Router = require('react-router')
 var Provider = require('react-redux').Provider
 var mongoose = require('mongoose')
 var jwt = require('jsonwebtoken')
+var sassMiddleware = require('node-sass-middleware')
+var path = require('path')
 
 // Load environment variables from .env file
 dotenv.load()
@@ -32,11 +34,11 @@ var routes = require('./app/routes')
 var configureStore = require('./app/store/configureStore').default
 
 var app = express()
-const createMiddleware = createLogger({
+const createLoggerMiddleware = createLogger({
   name: 'EagleTransporter',
   env: process.env.ENV || 'development'
 })
-app.logger = createMiddleware.logger
+app.logger = createLoggerMiddleware.logger
 
 mongoose.connect(process.env.MONGODB)
 mongoose.connection.on('error', function () {
@@ -47,11 +49,19 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
 app.set('port', process.env.PORT || 4242)
 app.use(compression())
-app.use(createMiddleware())
+app.use(createLoggerMiddleware())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(expressValidator())
 app.use(cookieParser())
+app.use(sassMiddleware({
+    src: path.join(__dirname, 'src'),
+    dest: path.join(__dirname, 'public', 'css'),
+    debug: process.env.ENV !== 'production',
+    outputStyle: process.env.ENV !== 'production' ? 'extended' : 'compressed',
+    force: process.env.ENV !== 'production',
+    prefix:  '/css'
+}))
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(function (req, res, next) {
