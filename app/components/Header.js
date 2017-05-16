@@ -11,27 +11,32 @@ class Header extends React.Component {
 
   render () {
     const rightNav = this.props.token ? (
-      <ul className='list-inline'>
-        <li>
-          <img className='avatar' src={this.props.user.picture || this.props.user.gravatar} />
+      <div className="right item">
+        <Link to="/account" className="ui black label">
+          <img className="ui right spaced avatar image" src={this.props.user.picture || this.props.user.gravatar} />
           {' '}{this.props.user.name || this.props.user.email || this.props.user.id}{' '}
-        </li>
-        <li><Link to='/account'>My Account</Link></li>
-        <li><a href='#' onClick={this.handleLogout.bind(this)}>Logout</a></li>
-      </ul>
+        </Link>
+        <Link to='/account' className="ui inverted button">My Account</Link>
+        <a href='#' className="ui inverted button" onClick={this.handleLogout.bind(this)}>Logout</a>
+      </div>
     ) : (
-      <ul className='list-inline'>
-        <li><Link to='/login'>Log in</Link></li>
-        <li><Link to='/signup'>Sign up</Link></li>
-      </ul>
+      <div className="right item">
+        <Link to='/login' className="ui inverted button">Log in</Link>
+        <Link to='/signup' className="ui inverted button">Sign Up</Link>
+      </div>
     )
     return (
-      <div className='container'>
-        <ul className='list-inline'>
-          <li><IndexLink to='/'>Home</IndexLink></li>
-          <li><Link to='/contact'>Contact</Link></li>
-        </ul>
-        {rightNav}
+      <div className='pusher header' style={{ backgroundColor: 'black', height: '8vh' }}>
+        <div className='ui container'>
+          <div className="ui large secondary inverted pointing menu">
+            <a className="toc item">
+              <i className="sidebar icon"></i>
+            </a>
+            <Link to='/' className="active item">Home</Link>
+            <Link to='Contact' className="item">Contact</Link>
+            {rightNav}
+          </div>
+        </div>
       </div>
     )
   }

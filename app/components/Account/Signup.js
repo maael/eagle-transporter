@@ -2,10 +2,7 @@ import React from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { signup } from '../../actions/auth'
-import { twitterLogin, googleLogin, githubLogin } from '../../actions/oauth'
-import Messages from '../Messages'
-
-const config = require('../../config.json')
+import AuthForm from './parts/AuthForm'
 
 class Signup extends React.Component {
   constructor (props) {
@@ -22,22 +19,10 @@ class Signup extends React.Component {
     this.props.dispatch(signup(this.state.name, this.state.email, this.state.password))
   }
 
-  handleTwitter () {
-    this.props.dispatch(twitterLogin(config))
-  }
-
-  handleGoogle () {
-    this.props.dispatch(googleLogin(config))
-  }
-
-  handleGithub () {
-    this.props.dispatch(githubLogin(config))
-  }
-
   render () {
+    const footer = (<p>Already have an account? <Link to='/login'>Log in</Link></p>)
     return (
-      <div className='container'>
-        <Messages messages={this.props.messages} />
+      <AuthForm messages={this.props.messages} footer={footer}>
         <form onSubmit={this.handleSignup.bind(this)}>
           <h4>Create an account</h4>
           <label htmlFor='name'>Name</label>
@@ -47,17 +32,9 @@ class Signup extends React.Component {
           <label htmlFor='password'>Password</label>
           <input type='password' name='password' id='password' placeholder='Password' value={this.state.password} onChange={this.handleChange.bind(this)} />
           <p className='help-text'>By signing up, you agree to the <Link to='/'>Terms of Service</Link>.</p>
-          <button type='submit'>Create an account</button>
+          <button className="ui button" type='submit'>Create an account</button>
         </form>
-        <hr />
-        <button onClick={this.handleTwitter.bind(this)}>Sign in with Twitter</button>
-        <br />
-        <button onClick={this.handleGoogle.bind(this)}>Sign in with Google</button>
-        <br />
-        <button onClick={this.handleGithub.bind(this)}>Sign in with Github</button>
-        <br />
-        <p>Already have an account? <Link to='/login'>Log in</Link></p>
-      </div>
+      </AuthForm>
     )
   }
 }
