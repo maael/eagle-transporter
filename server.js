@@ -12,7 +12,7 @@ var Router = require('react-router')
 var Provider = require('react-redux').Provider
 var mongoose = require('mongoose')
 var jwt = require('jsonwebtoken')
-var sassMiddleware = require('node-sass-middleware')
+var lessMiddleware = require('less-middleware')
 var path = require('path')
 
 // Load environment variables from .env file
@@ -54,15 +54,21 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(expressValidator())
 app.use(cookieParser())
-app.use(sassMiddleware({
-    src: path.join(__dirname, 'src'),
-    dest: path.join(__dirname, 'public', 'css'),
+
+const semanticPath = path.join(__dirname, 'node_modules', 'semantic-ui-less')
+
+app.use(lessMiddleware(path.join(__dirname, 'src'), {
+    dest: path.join(__dirname, 'public'),
     debug: process.env.ENV !== 'production',
-    outputStyle: process.env.ENV !== 'production' ? 'extended' : 'compressed',
-    force: process.env.ENV !== 'production',
-    prefix:  '/css'
+    once: process.env.ENV === 'production',
+    // force: process.env.ENV !== 'production',
+    render: {
+      yuicompress: process.env.ENV === 'production',
+      paths: [ semanticPath ]
+    }
 }))
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/themes/default/assets/fonts', express.static(path.join(semanticPath, 'themes', 'default', 'assets', 'fonts')))
 
 app.use(function (req, res, next) {
   req.isAuthenticated = function () {
