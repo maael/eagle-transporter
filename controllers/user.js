@@ -55,6 +55,7 @@ exports.loginPost = function (req, res, next) {
       if (!isMatch) {
         return res.status(401).send({ msg: 'Invalid email or password' })
       }
+      if (err) return res.status(500).send({ msg: 'There was an error logging in.' })
       res.send({ token: generateToken(user), user: user.toJSON() })
     })
   })
@@ -86,6 +87,7 @@ exports.signupPost = function (req, res, next) {
       password: req.body.password
     })
     user.save(function (err) {
+      if (err) return res.status(500).send({ msg: 'There was an error creating your account.' })
       res.send({ token: generateToken(user), user: user })
     })
   })
@@ -112,6 +114,7 @@ exports.accountPut = function (req, res, next) {
   }
 
   User.findById(req.user.id, function (err, user) {
+    if (err) return res.status(500).send({ msg: 'There was an error updating your account.' })
     if ('password' in req.body) {
       user.password = req.body.password
     } else {
@@ -120,6 +123,7 @@ exports.accountPut = function (req, res, next) {
       user.location = req.body.location
     }
     user.save(function (err) {
+      if (err) return res.status(500).send({ msg: 'There was an error updating your account.' })
       if ('password' in req.body) {
         res.send({ msg: 'Your password has been changed.' })
       } else if (err && err.code === 11000) {
@@ -159,6 +163,7 @@ exports.unlink = function (req, res, next) {
         return res.status(400).send({ msg: 'Invalid OAuth Provider' })
     }
     user.save(function (err) {
+      if (err) return res.status(500).send({ msg: 'There was an error unlinking your account.' })
       res.send({ msg: 'Your account has been unlinked.' })
     })
   })
@@ -193,6 +198,7 @@ exports.forgotPost = function (req, res, next) {
         user.passwordResetToken = token
         user.passwordResetExpires = Date.now() + 3600000 // expire in 1 hour
         user.save(function (err) {
+          if (err) return res.status(500).send({ msg: 'There was an error resetting your password.' })
           done(err, token, user)
         })
       })
@@ -267,6 +273,7 @@ exports.resetPost = function (req, res, next) {
         'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       }
       transporter.sendMail(mailOptions, function (err) {
+        if (err) return res.status(500).send({ msg: 'There was an error resetting your password.' })
         res.send({ msg: 'Your password has been changed successfully.' })
       })
     }
