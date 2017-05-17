@@ -48,6 +48,7 @@ const createLoggerMiddleware = createLogger({
 })
 app.logger = createLoggerMiddleware.logger
 
+mongoose.Promise = Promise
 mongoose.connect(process.env.MONGODB)
 mongoose.connection.on('error', function () {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.')
