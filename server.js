@@ -24,6 +24,12 @@ require('babel-polyfill')
 
 // Models
 var User = require('./models/User')
+require('./models/Cargo')
+require('./models/Module')
+require('./models/Destination')
+require('./models/Transporter')
+require('./models/Fleet')
+require('./models/Invite')
 
 // Controllers
 var userController = require('./controllers/user')
