@@ -10,6 +10,11 @@ export default function messages (state = {}, action) {
     case 'OAUTH_FAILURE':
     case 'UNLINK_FAILURE':
     case 'LINK_FAILURE':
+    case 'FLEET_CREATE_FAILURE':
+    case 'FLEET_GET_FAILURE':
+    case 'INVITE_SEND_FAILURE':
+    case 'INVITE_GET_FAILURE':
+    case 'INVITE_DELETE_FAILURE':
       return {
         error: action.messages
       }
@@ -17,6 +22,11 @@ export default function messages (state = {}, action) {
     case 'CHANGE_PASSWORD_SUCCESS':
     case 'RESET_PASSWORD_SUCCESS':
     case 'CONTACT_FORM_SUCCESS':
+    case 'FLEET_CREATE_SUCCESS':
+    case 'FLEET_GET_SUCCESS':
+    case 'INVITE_SEND_SUCCESS':
+    case 'INVITE_GET_SUCCESS':
+    case 'INVITE_DELETE_SUCCESS':
       return {
         success: action.messages
       }
