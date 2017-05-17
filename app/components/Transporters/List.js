@@ -24,9 +24,9 @@ class List extends React.Component {
   render () {
     return (
       <div className='container' style={{ marginTop: '20px', paddingBottom: '20px' }}>
-        <div className="ui raised segments">
-          <div className="ui segment" style={{ overflow: 'hidden' }}>
-            <h1 className="left floated" style={{ float: 'left' }}>{this.props.fleets.activeFleet ? this.props.fleets.activeFleet.name : ''} Transporters</h1>
+        <div className='ui raised segments'>
+          <div className='ui segment' style={{ overflow: 'hidden' }}>
+            <h1 className='left floated' style={{ float: 'left' }}>{this.props.fleets.activeFleet ? this.props.fleets.activeFleet.name : ''} Transporters</h1>
           </div>
         </div>
       </div>

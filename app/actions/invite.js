@@ -149,4 +149,3 @@ export function cancelInvite (inviteId, fleet) {
     })
   }
 }
-

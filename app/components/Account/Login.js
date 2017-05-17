@@ -23,7 +23,7 @@ class Login extends React.Component {
   render () {
     const footer = (<p>Don't have an account? <Link to='/signup'>Sign up</Link></p>)
     return (
-      <AuthForm messages={this.props.messages} footer={footer} classes="seven wide column">
+      <AuthForm messages={this.props.messages} footer={footer} classes='seven wide column'>
         <LoginForm />
       </AuthForm>
     )

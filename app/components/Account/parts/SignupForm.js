@@ -29,7 +29,7 @@ class SignupForm extends React.Component {
         <label htmlFor='password'>Password</label>
         <input type='password' name='password' id='password' placeholder='Password' value={this.state.password} onChange={this.handleChange.bind(this)} />
         <p className='help-text'>By signing up, you agree to the <Link to='/'>Terms of Service</Link>.</p>
-        <button className="ui button" type='submit'>Create an account</button>
+        <button className='ui button' type='submit'>Create an account</button>
       </form>
     )
   }

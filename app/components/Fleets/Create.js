@@ -32,16 +32,16 @@ class List extends React.Component {
   render () {
     return (
       <div className='container' style={{ marginTop: '20px' }}>
-        <div className="ui raised segments">
-          <div className="ui segment" style={{ overflow: 'hidden' }}>
-            <h1 className="left floated" style={{ float: 'left' }}>Launch New Fleet</h1>
+        <div className='ui raised segments'>
+          <div className='ui segment' style={{ overflow: 'hidden' }}>
+            <h1 className='left floated' style={{ float: 'left' }}>Launch New Fleet</h1>
           </div>
-          <div className="ui segment">
+          <div className='ui segment'>
             <form onSubmit={this.handleCreate.bind(this)}>
-            <div className="ui action input">
-              <input type="text" name='name' placeholder="Fleet Name" value={this.state.fleet.name} onChange={this.handleChange.bind(this)} autoFocus />
-              <button className="ui green button" type="submit">Create</button>
-            </div>
+              <div className='ui action input'>
+                <input type='text' name='name' placeholder='Fleet Name' value={this.state.fleet.name} onChange={this.handleChange.bind(this)} autoFocus />
+                <button className='ui green button' type='submit'>Create</button>
+              </div>
             </form>
           </div>
         </div>

@@ -67,14 +67,14 @@ app.use(cookieParser())
 const semanticPath = path.join(__dirname, 'node_modules', 'semantic-ui-less')
 
 app.use(lessMiddleware(path.join(__dirname, 'src'), {
-    dest: path.join(__dirname, 'public'),
-    debug: process.env.ENV !== 'production',
-    once: process.env.ENV === 'production',
+  dest: path.join(__dirname, 'public'),
+  debug: process.env.ENV !== 'production',
+  once: process.env.ENV === 'production',
     // force: process.env.ENV !== 'production',
-    render: {
-      yuicompress: process.env.ENV === 'production',
-      paths: [ semanticPath ]
-    }
+  render: {
+    yuicompress: process.env.ENV === 'production',
+    paths: [ semanticPath ]
+  }
 }))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/themes/default/assets/fonts', express.static(path.join(semanticPath, 'themes', 'default', 'assets', 'fonts')))

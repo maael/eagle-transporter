@@ -27,7 +27,7 @@ class LoginForm extends React.Component {
         <label htmlFor='password'>Password</label>
         <input type='password' name='password' id='password' placeholder='Password' value={this.state.password} onChange={this.handleChange.bind(this)} />
         <p><Link to='/forgot'>Forgot your password?</Link></p>
-        <button className="ui button" type='submit'>
+        <button className='ui button' type='submit'>
           Log in
         </button>
       </form>

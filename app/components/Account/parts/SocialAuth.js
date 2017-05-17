@@ -17,17 +17,17 @@ class SocialAuth extends React.Component {
 
   render () {
     return (
-      <div className="fluid ui vertical buttons">
-        <button className="fluid ui twitter button" onClick={this.handleTwitter.bind(this)}>
-          <i className="icon twitter"></i>
+      <div className='fluid ui vertical buttons'>
+        <button className='fluid ui twitter button' onClick={this.handleTwitter.bind(this)}>
+          <i className='icon twitter' />
           Sign in with Twitter
         </button>
-        <button className="fluid ui google plus button" onClick={this.handleGoogle.bind(this)}>
-            <i className="icon google"></i>
+        <button className='fluid ui google plus button' onClick={this.handleGoogle.bind(this)}>
+          <i className='icon google' />
           Sign in with Google
         </button>
-        <button className="fluid ui black button" onClick={this.handleGithub.bind(this)}>
-            <i className="icon github"></i>
+        <button className='fluid ui black button' onClick={this.handleGithub.bind(this)}>
+          <i className='icon github' />
           Sign in with Github
         </button>
       </div>

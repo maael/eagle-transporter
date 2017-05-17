@@ -1,5 +1,5 @@
 import React from 'react'
-import SVGInline from "react-svg-inline"
+import SVGInline from 'react-svg-inline'
 
 const md5 = require('js-md5')
 const jdenticon = require('jdenticon')

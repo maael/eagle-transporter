@@ -61,11 +61,11 @@ exports.invitePost = function (req, res) {
     console.log('sending', mailOptions)
     // transporter.sendMail(mailOptions, (err) => {
       // if (err) return res.status(500).send({ msg: 'There was a problem sending the invite.' })
-      invite.save((err) => {
-        console.log('saving error', err)
-        if (err) return res.status(500).send({ msg: 'There was a problem sending the invite.' })
-        res.send({ msg: `An invite has been sent to ${invite.email}` })
-      })
+    invite.save((err) => {
+      console.log('saving error', err)
+      if (err) return res.status(500).send({ msg: 'There was a problem sending the invite.' })
+      res.send({ msg: `An invite has been sent to ${invite.email}` })
+    })
     // })
   })
 }

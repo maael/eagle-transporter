@@ -6,14 +6,14 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <div className="ui equal width centered grid">
-          <div className="row" style={{ height: '5vh' }}>
+        <div className='ui equal width centered grid'>
+          <div className='row' style={{ height: '5vh' }}>
             <Header />
           </div>
-          <div className="row">
+          <div className='row'>
             {this.props.children}
           </div>
-          <div className="row" style={{ height: '5vh' }}>
+          <div className='row' style={{ height: '5vh' }}>
             <Footer />
           </div>
         </div>

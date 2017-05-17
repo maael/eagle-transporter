@@ -44,41 +44,41 @@ class List extends React.Component {
   render () {
     return (
       <div className='container' style={{ marginTop: '20px', paddingBottom: '20px' }}>
-        <div className="ui raised segments">
-          <div className="ui segment" style={{ overflow: 'hidden' }}>
-            <h1 className="left floated" style={{ float: 'left' }}>{this.props.fleets.activeFleet ? this.props.fleets.activeFleet.name : ''} Captains</h1>
+        <div className='ui raised segments'>
+          <div className='ui segment' style={{ overflow: 'hidden' }}>
+            <h1 className='left floated' style={{ float: 'left' }}>{this.props.fleets.activeFleet ? this.props.fleets.activeFleet.name : ''} Captains</h1>
           </div>
-          <div className="ui segment" style={{ overflow: 'hidden' }}>
-            <h3 className="left floated" style={{ float: 'left' }}>Invites</h3>
+          <div className='ui segment' style={{ overflow: 'hidden' }}>
+            <h3 className='left floated' style={{ float: 'left' }}>Invites</h3>
             <form onSubmit={this.sendInvite.bind(this)} style={{ float: 'right' }}>
-              <div className="ui action input">
-                  <input type="email" name='inviteEmail' value={this.state.inviteEmail} onChange={this.handleChange.bind(this)} placeholder="Email" />
-                  <button className="ui green button" type="submit">Send Invite</button>
+              <div className='ui action input'>
+                <input type='email' name='inviteEmail' value={this.state.inviteEmail} onChange={this.handleChange.bind(this)} placeholder='Email' />
+                <button className='ui green button' type='submit'>Send Invite</button>
               </div>
             </form>
           </div>
-          <div className="ui segment">
-            <div className="ui centered stackable cards">
+          <div className='ui segment'>
+            <div className='ui centered stackable cards'>
               {this.props.invites && this.props.invites.length > 0 ? this.props.invites.map((invite, i) => (
-                <div key={i} className="card">
-                  <div className="content">
-                    <div className="header">{invite.email}</div>
-                    <div className="meta">Sent on {moment(invite.createdAt).format('DD/MM/YY')}</div>
+                <div key={i} className='card'>
+                  <div className='content'>
+                    <div className='header'>{invite.email}</div>
+                    <div className='meta'>Sent on {moment(invite.createdAt).format('DD/MM/YY')}</div>
                   </div>
-                  <div className="extra content">
-                    <div className="ui two buttons">
-                      <div className="ui basic green button">Resend</div>
-                      <div className="ui basic red button" onClick={this.cancelInvite.bind(this, invite._id)}>Cancel</div>
+                  <div className='extra content'>
+                    <div className='ui two buttons'>
+                      <div className='ui basic green button'>Resend</div>
+                      <div className='ui basic red button' onClick={this.cancelInvite.bind(this, invite._id)}>Cancel</div>
                     </div>
                   </div>
                 </div>
               )) : 'No invites to show.'}
             </div>
           </div>
-          <div className="ui segment" style={{ overflow: 'hidden' }}>
-            <h3 className="left floated" style={{ float: 'left' }}>Current Captains</h3>
+          <div className='ui segment' style={{ overflow: 'hidden' }}>
+            <h3 className='left floated' style={{ float: 'left' }}>Current Captains</h3>
           </div>
-          <div className="ui segment">
+          <div className='ui segment'>
             {this.props.fleets.activeFleet ? this.props.fleets.activeFleet.captains.map((captain, i) => <div key={i}>{captain}</div>) : ''}
           </div>
         </div>

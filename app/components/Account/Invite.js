@@ -9,10 +9,10 @@ class Invite extends React.Component {
   render () {
     const footer = (<p>Already have an account? <Link to='/login'>Log in</Link></p>)
     return (
-      <AuthForm messages={this.props.messages} classes="ten column wide" footer={footer}>
+      <AuthForm messages={this.props.messages} classes='ten column wide' footer={footer}>
         <h2>You've been invited to join</h2>
         <SignupForm />
-        <br/>
+        <br />
         <LoginForm />
       </AuthForm>
     )
