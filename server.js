@@ -34,6 +34,8 @@ require('./models/Invite')
 // Controllers
 var userController = require('./controllers/user')
 var contactController = require('./controllers/contact')
+var fleetController = require('./controllers/fleet')
+var inviteController = require('./controllers/invite')
 
 // React and Server-Side Rendering
 var routes = require('./app/routes')
@@ -112,6 +114,16 @@ app.post('/auth/twitter', userController.authTwitter)
 app.get('/auth/twitter/callback', userController.authTwitterCallback)
 app.post('/auth/github', userController.authGithub)
 app.get('/auth/github/callback', userController.authGithubCallback)
+app.get('/auth/github/callback', userController.authGithubCallback)
+
+app.get('/api/fleet', userController.ensureAuthenticated, fleetController.fleetGet)
+app.post('/api/fleet', userController.ensureAuthenticated, fleetController.fleetPost)
+
+app.get('/api/invite/:id', userController.ensureAuthenticated, inviteController.inviteGet)
+app.post('/api/invite/:id', userController.ensureAuthenticated, inviteController.invitePost)
+app.get('/api/invite/accept/:hash', inviteController.inviteHashGet)
+app.get('/api/invite/accept/:hash', inviteController.inviteHashPost)
+app.delete('/api/invite/:id', userController.ensureAuthenticated, inviteController.inviteDelete)
 
 // React server rendering
 app.use(function (req, res) {
