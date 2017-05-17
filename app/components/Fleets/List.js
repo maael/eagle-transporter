@@ -5,6 +5,7 @@ import { getFleets, setActiveFleet } from '../../actions/fleet'
 import FleetIcon from '../parts/FleetIcon'
 
 const moment = require('moment')
+const jdenticon = require('jdenticon')
 
 class List extends React.Component {
   constructor (props) {

@@ -13,7 +13,6 @@ var Provider = require('react-redux').Provider
 var mongoose = require('mongoose')
 var jwt = require('jsonwebtoken')
 var lessMiddleware = require('less-middleware')
-var path = require('path')
 
 // Load environment variables from .env file
 dotenv.load()

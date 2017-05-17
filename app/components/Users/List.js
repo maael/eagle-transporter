@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { sendInvite, getInvites, cancelInvite } from '../../actions/invite'
-import Messages from '../Messages'
 
 const moment = require('moment')
 
