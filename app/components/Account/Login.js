@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { login } from '../../actions/auth'
 import AuthForm from './parts/AuthForm'
+import LoginForm from './parts/LoginForm'
 
 class Login extends React.Component {
   constructor (props) {
@@ -23,17 +24,7 @@ class Login extends React.Component {
     const footer = (<p>Don't have an account? <Link to='/signup'>Sign up</Link></p>)
     return (
       <AuthForm messages={this.props.messages} footer={footer} classes="seven wide column">
-        <form onSubmit={this.handleLogin.bind(this)}>
-          <h4>Log In</h4>
-          <label htmlFor='email'>Email</label>
-          <input type='email' name='email' id='email' placeholder='Email' value={this.state.email} onChange={this.handleChange.bind(this)} autoFocus />
-          <label htmlFor='password'>Password</label>
-          <input type='password' name='password' id='password' placeholder='Password' value={this.state.password} onChange={this.handleChange.bind(this)} />
-          <p><Link to='/forgot'>Forgot your password?</Link></p>
-          <button className="ui button" type='submit'>
-            Log in
-          </button>
-        </form>
+        <LoginForm />
       </AuthForm>
     )
   }

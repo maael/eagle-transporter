@@ -3,13 +3,17 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import AuthForm from './parts/AuthForm'
 import SignupForm from './parts/SignupForm'
+import LoginForm from './parts/LoginForm'
 
-class Signup extends React.Component {
+class Invite extends React.Component {
   render () {
     const footer = (<p>Already have an account? <Link to='/login'>Log in</Link></p>)
     return (
-      <AuthForm messages={this.props.messages} footer={footer}>
+      <AuthForm messages={this.props.messages} classes="ten column wide" footer={footer}>
+        <h2>You've been invited to join</h2>
         <SignupForm />
+        <br/>
+        <LoginForm />
       </AuthForm>
     )
   }
@@ -21,4 +25,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Signup)
+export default connect(mapStateToProps)(Invite)

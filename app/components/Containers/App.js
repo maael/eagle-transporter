@@ -1,20 +1,76 @@
 import React from 'react'
-import Header from './Header'
-import Footer from './Footer'
+import { connect } from 'react-redux'
+import { Link } from 'react-router'
+import Footer from '../Footer'
+import FleetIcon from '../parts/FleetIcon'
 
 class App extends React.Component {
+  renderActiveFleetItem () {
+    const activeFleet = this.props.fleets && this.props.fleets.activeFleet
+    if (activeFleet) {
+      return (
+        <span>
+          <FleetIcon fleet={activeFleet} size={28} className="ui right spaced avatar image fleet-avatar" />
+          {' '}{activeFleet.name}{' '}
+        </span>
+      )
+    }
+    return null
+  }
+
   render () {
     return (
-      <div>
-        <div className="ui equal width centered grid">
-          <div className="row" style={{ height: '5vh' }}>
-            <Header />
+      <div className="ui grid hero-stars" style={{ height: '100%' }}>
+        <div className='stars' />
+        <div className='twinkling' />
+        <div className="row">
+          <div className="column three wide">
+            <div className="ui left vertical inverted sidebar visible menu">
+              <Link to='/account' className="item">
+                <img className="ui right spaced avatar image" src={this.props.user.picture || this.props.user.gravatar} />
+                {' '}{this.props.user.name || this.props.user.email || this.props.user.id}{' '}
+              </Link>
+              <Link to='/fleets' className="item">
+                <i className="block layout icon"></i>
+                Fleets
+              </Link>
+              <div className="item">
+                {this.renderActiveFleetItem()}
+                <div className="menu">
+                  <Link to='/' className="active item">
+                    <i className="home icon"></i>
+                    Home
+                  </Link>
+                  {this.props.fleets && this.props.fleets.activeFleet ? (
+                  <Link to='/captains' className="item">
+                    <i className="user icon"></i>
+                    Captains
+                  </Link>
+                  ) : null}
+                  {this.props.fleets && this.props.fleets.activeFleet ? (
+                  <Link to='/cargos' className="item">
+                    <i className="suitcase icon"></i>
+                    Cargos
+                  </Link>
+                  ) : null}
+                  {this.props.fleets && this.props.fleets.activeFleet ? (
+                  <Link to='/transporters' className="item">
+                    <i className="rocket icon"></i>
+                    Transporters
+                  </Link>
+                  ) : null}
+                  {this.props.fleets && this.props.fleets.activeFleet ? (
+                  <Link to='/destinations' className="item">
+                    <i className="globe icon"></i>
+                    Destinations
+                  </Link>
+                  ) : null}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="row">
+          <div className="column thirteen wide">
             {this.props.children}
-          </div>
-          <div className="row" style={{ height: '5vh' }}>
-            <Footer />
           </div>
         </div>
       </div>
@@ -22,4 +78,13 @@ class App extends React.Component {
   }
 }
 
-export default App
+
+const mapStateToProps = (state) => {
+  return {
+    token: state.auth.token,
+    user: state.auth.user,
+    fleets: state.fleets
+  }
+}
+
+export default connect(mapStateToProps)(App)

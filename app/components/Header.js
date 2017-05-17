@@ -16,6 +16,7 @@ class Header extends React.Component {
           <img className="ui right spaced avatar image" src={this.props.user.picture || this.props.user.gravatar} />
           {' '}{this.props.user.name || this.props.user.email || this.props.user.id}{' '}
         </Link>
+        <Link to='/fleets' className="ui inverted button">Launch App</Link>
         <Link to='/account' className="ui inverted button">My Account</Link>
         <a href='#' className="ui inverted button" onClick={this.handleLogout.bind(this)}>Logout</a>
       </div>
@@ -33,7 +34,6 @@ class Header extends React.Component {
               <i className="sidebar icon"></i>
             </a>
             <Link to='/' className="active item">Home</Link>
-            <Link to='Contact' className="item">Contact</Link>
             {rightNav}
           </div>
         </div>
