@@ -6,10 +6,13 @@ import rootReducer from '../reducers'
 
 export default function configureStore (initialState) {
   const logger = createLogger()
+  const middleware = process.env.ENV === 'production'
+    ? applyMiddleware(thunk, promise)
+    : applyMiddleware(thunk, promise, logger)
   const store = createStore(
     rootReducer,
     initialState,
-    applyMiddleware(thunk, promise, logger)
+    middleware
   )
 
   return store
