@@ -4,13 +4,13 @@ import moment from 'moment'
 import cookie from 'react-cookie'
 import { browserHistory } from 'react-router'
 
-const oauthConfig = require('../config.json')
+const oauthConfig = require('../config.json')[process.env.ENV || 'development']
 
 // Sign in with Twitter
 export function twitterLogin () {
   const twitter = {
-    url: `${oauthConfig.host}:${oauthConfig.port}auth/twitter`,
-    redirectUri: `${oauthConfig.host}:${oauthConfig.port}/auth/twitter/callback`,
+    url: `${oauthConfig.url}auth/twitter`,
+    redirectUri: `${oauthConfig.url}/auth/twitter/callback`,
     authorizationUrl: 'https://api.twitter.com/oauth/authenticate'
   }
 
@@ -28,9 +28,9 @@ export function twitterLogin () {
 // Sign in with Google
 export function googleLogin () {
   const google = {
-    url: `${oauthConfig.host}:${oauthConfig.port}/auth/google`,
-    clientId: '814958990796-p1centjebv1k0htp3am05tfg5k10nl0k.apps.googleusercontent.com',
-    redirectUri: `${oauthConfig.host}:${oauthConfig.port}/auth/google/callback`,
+    url: `${oauthConfig.url}/auth/google`,
+    clientId: oauthConfig.auth.google.clientId,
+    redirectUri: `${oauthConfig.url}/auth/google/callback`,
     authorizationUrl: 'https://accounts.google.com/o/oauth2/auth',
     scope: 'openid profile email',
     width: 452,
@@ -50,9 +50,9 @@ export function googleLogin () {
 // Sign in with Github
 export function githubLogin () {
   const github = {
-    url: `${oauthConfig.host}:${oauthConfig.port}/auth/github`,
-    clientId: '582f15ee00326794900b',
-    redirectUri: `${oauthConfig.host}:${oauthConfig.port}/auth/github/callback`,
+    url: `${oauthConfig.url}/auth/github`,
+    clientId: oauthConfig.auth.github.clientId,
+    redirectUri: `${oauthConfig.url}/auth/github/callback`,
     authorizationUrl: 'https://github.com/login/oauth/authorize',
     scope: 'user:email profile',
     width: 452,

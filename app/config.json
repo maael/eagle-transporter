@@ -1,4 +1,24 @@
 {
-  "host": "http://localhost",
-  "port": 4245
+  "development": {
+    "url": "http://localhost:4245",
+    "auth": {
+      "google": {
+        "clientId": "474535843989-g6pfo1tjvn88nftm35o39j47tn50ff3p.apps.googleusercontent.com"
+      },
+      "github": {
+        "clientId": "582f15ee00326794900b"
+      }
+    }
+  },
+  "production": {
+    "url": "http://eagle.maelphick.com",
+    "auth": {
+      "google": {
+        "clientId": "474535843989-g6pfo1tjvn88nftm35o39j47tn50ff3p.apps.googleusercontent.com"
+      },
+      "github": {
+        "clientId": "3f692112e1a632aed260"
+      }
+    }
+  }
 }
