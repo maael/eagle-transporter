@@ -9,7 +9,7 @@ const oauthConfig = require('../config.json')[process.env.ENV || 'development']
 // Sign in with Twitter
 export function twitterLogin () {
   const twitter = {
-    url: `${oauthConfig.url}auth/twitter`,
+    url: `${oauthConfig.url}/auth/twitter`,
     redirectUri: `${oauthConfig.url}/auth/twitter/callback`,
     authorizationUrl: 'https://api.twitter.com/oauth/authenticate'
   }
