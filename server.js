@@ -90,12 +90,15 @@ app.use((req, res, next) => {
 
   if (req.isAuthenticated()) {
     var payload = req.isAuthenticated()
-    User.findById(payload.sub).populate({ path: 'activeFleet', populate: { path: 'captains', model: 'User' }}).exec((err, user) => {
-      console.log('USER', user)
-      if (err) return next()
-      req.user = user
-      next()
-    })
+    User
+      .findById(payload.sub)
+      .populate({ path: 'activeFleet', populate: { path: 'captains', model: 'User' } })
+      .exec((err, user) => {
+        console.log('USER', user)
+        if (err) return next()
+        req.user = user
+        next()
+      })
   } else {
     next()
   }

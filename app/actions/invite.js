@@ -2,7 +2,6 @@ import { setActiveFleet } from './fleet'
 
 export function sendInvite (email, invitee) {
   return (dispatch, getState) => {
-    const { auth } = getState()
     dispatch({
       type: 'CLEAR_MESSAGES'
     })
@@ -70,7 +69,6 @@ export function resendInvite (inviteId) {
 
 export function getInvites () {
   return (dispatch, getState) => {
-    const { auth } = getState()
     dispatch({
       type: 'CLEAR_MESSAGES'
     })

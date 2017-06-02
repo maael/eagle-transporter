@@ -510,7 +510,6 @@ exports.authGithubCallback = function (req, res) {
  * GET /account/active-fleet
  */
 exports.activeFleetGet = function (req, res) {
-  let user = req.user
   return res.send({ activeFleet: req.user.activeFleet })
 }
 

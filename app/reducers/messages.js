@@ -13,7 +13,7 @@ export default function messages (state = {}, action) {
     case 'FLEET_CREATE_FAILURE':
     case 'FLEET_GET_FAILURE':
     case 'FLEET_SET_ACTIVE_FAILURE':
-    case 'FLEET_GET_ACTIVE_SUCCESS':
+    case 'FLEET_GET_ACTIVE_FAILURE':
     case 'INVITE_SEND_FAILURE':
     case 'INVITE_RESEND_FAILURE':
     case 'INVITE_GET_FAILURE':
