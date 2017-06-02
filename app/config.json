@@ -8,6 +8,9 @@
       "github": {
         "clientId": "582f15ee00326794900b"
       }
+    },
+    "cookie": {
+      "path": "/"
     }
   },
   "production": {
@@ -19,6 +22,9 @@
       "github": {
         "clientId": "3f692112e1a632aed260"
       }
+    },
+    "cookie": {
+      "path": "/"
     }
   }
 }

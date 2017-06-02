@@ -15,7 +15,11 @@ class SignupForm extends React.Component {
 
   handleSignup (event) {
     event.preventDefault()
-    this.props.dispatch(signup(this.state.name, this.state.email, this.state.password))
+    if (this.props.handleSignup) {
+      this.props.handleSignup(this.state)
+    } else {
+      this.props.dispatch(signup(this.state.name, this.state.email, this.state.password))
+    }
   }
 
   render () {

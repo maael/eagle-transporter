@@ -45,7 +45,7 @@ exports.loginPost = function (req, res, next) {
     return res.status(400).send(errors)
   }
 
-  User.findOne({ email: req.body.email }, function (err, user) {
+  User.findOne({ email: req.body.email }).populate('activeFleet').exec((err, user) => {
     if (!user) {
       return res.status(401).send({ msg: 'The email address ' + req.body.email + ' is not associated with any account. ' +
         'Double-check your email address and try again.'
@@ -77,7 +77,7 @@ exports.signupPost = function (req, res, next) {
     return res.status(400).send(errors)
   }
 
-  User.findOne({ email: req.body.email }, function (err, user) {
+  User.findOne({ email: req.body.email }, (err, user) => {
     if (user) {
       return res.status(400).send({ msg: 'The email address you have entered is already associated with another account.' })
     }
@@ -86,7 +86,7 @@ exports.signupPost = function (req, res, next) {
       email: req.body.email,
       password: req.body.password
     })
-    user.save(function (err) {
+    user.save((err) => {
       if (err) return res.status(500).send({ msg: 'There was an error creating your account.' })
       res.send({ token: generateToken(user), user: user })
     })
@@ -113,7 +113,7 @@ exports.accountPut = function (req, res, next) {
     return res.status(400).send(errors)
   }
 
-  User.findById(req.user.id, function (err, user) {
+  User.findById(req.user.id).populate('activeFleet').exec((err, user) => {
     if (err) return res.status(500).send({ msg: 'There was an error updating your account.' })
     if ('password' in req.body) {
       user.password = req.body.password
@@ -307,7 +307,7 @@ exports.authGoogle = function (req, res) {
       }
       // Step 3a. Link accounts if user is authenticated.
       if (req.isAuthenticated()) {
-        User.findOne({ google: profile.sub }, function (err, user) {
+        User.findOne({ google: profile.sub }).populate('activeFleet').exec((err, user) => {
           if (user) {
             return res.status(409).send({ msg: 'There is already an existing account linked with Google that belongs to you.' })
           }
@@ -322,7 +322,7 @@ exports.authGoogle = function (req, res) {
         })
       } else {
         // Step 3b. Create a new user account or return an existing one.
-        User.findOne({ google: profile.sub }, function (err, user) {
+        User.findOne({ google: profile.sub }).populate('activeFleet').exec((err, user) => {
           if (user) {
             return res.send({ token: generateToken(user), user: user })
           }
@@ -396,7 +396,7 @@ exports.authTwitter = function (req, res) {
       request.get({ url: profileUrl + accessToken.screen_name, oauth: profileOauth, json: true }, function (err, response, profile) {
         // Step 5a. Link accounts if user is authenticated.
         if (req.isAuthenticated()) {
-          User.findOne({ twitter: profile.id }, function (err, user) {
+          User.findOne({ twitter: profile.id }).populate('activeFleet').exec((err, user) => {
             if (user) {
               return res.status(409).send({ msg: 'There is already an existing account linked with Twitter that belongs to you.' })
             }
@@ -411,7 +411,7 @@ exports.authTwitter = function (req, res) {
           })
         } else {
         // Step 5b. Create a new user account or return an existing one.
-          User.findOne({ twitter: profile.id }, function (err, user) {
+          User.findOne({ twitter: profile.id }).populate('activeFleet').exec((err, user) => {
             if (user) {
               return res.send({ token: generateToken(user), user: user })
             }
@@ -467,7 +467,7 @@ exports.authGithub = function (req, res) {
       }
       // Step 3a. Link accounts if user is authenticated.
       if (req.isAuthenticated()) {
-        User.findOne({ github: profile.id }, function (err, user) {
+        User.findOne({ github: profile.id }).populate('activeFleet').exec((err, user) => {
           if (user) {
             return res.status(409).send({ msg: 'There is already an existing account linked with Github that belongs to you.' })
           }
@@ -482,7 +482,7 @@ exports.authGithub = function (req, res) {
         })
       } else {
         // Step 3b. Create a new user account or return an existing one.
-        User.findOne({ github: profile.id }, function (err, user) {
+        User.findOne({ github: profile.id }).populate('activeFleet').exec((err, user) => {
           if (user) {
             return res.send({ token: generateToken(user), user: user })
           }
@@ -504,4 +504,30 @@ exports.authGithub = function (req, res) {
 
 exports.authGithubCallback = function (req, res) {
   res.render('loading')
+}
+
+/**
+ * GET /account/active-fleet
+ */
+exports.activeFleetGet = function (req, res) {
+  let user = req.user
+  return res.send({ activeFleet: req.user.activeFleet })
+}
+
+/**
+ * POST /account/active-fleet
+ * Body { fleetId: objectId }
+ */
+exports.activeFleetPost = function (req, res) {
+  req.assert('id', 'Fleet id is not valid').notEmpty()
+
+  const errors = req.validationErrors()
+  if (errors) return res.status(400).send(errors)
+
+  let user = req.user
+  user.activeFleet = req.body.id
+  user.save((err) => {
+    if (err) return res.status(500).send({ msg: 'There was a problem setting the active fleet.' })
+    return res.send({ user: user })
+  })
 }

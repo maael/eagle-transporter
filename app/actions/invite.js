@@ -1,16 +1,18 @@
-export function sendInvite (email, invitee, fleet) {
-  return (dispatch) => {
+import { setActiveFleet } from './fleet'
+
+export function sendInvite (email, invitee) {
+  return (dispatch, getState) => {
+    const { auth } = getState()
     dispatch({
       type: 'CLEAR_MESSAGES'
     })
-    return fetch(`/api/invite/${fleet._id}`, {
+    return fetch('/api/invite', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({
         email,
-        invitee,
-        fleet
+        invitee
       })
     }).then((response) => {
       if (response.ok) {
@@ -19,7 +21,7 @@ export function sendInvite (email, invitee, fleet) {
             type: 'INVITE_SEND_SUCCESS',
             messages: [json]
           })
-          dispatch(getInvites(fleet))
+          dispatch(getInvites())
         })
       } else {
         return response.json().then((json) => {
@@ -33,12 +35,46 @@ export function sendInvite (email, invitee, fleet) {
   }
 }
 
-export function getInvites (fleet) {
+export function resendInvite (inviteId) {
   return (dispatch) => {
     dispatch({
       type: 'CLEAR_MESSAGES'
     })
-    return fetch(`/api/invite/${fleet._id}`, {
+    return fetch(`/api/invite/resend`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        id: inviteId
+      })
+    }).then((response) => {
+      if (response.ok) {
+        return response.json().then((json) => {
+          dispatch({
+            type: 'INVITE_RESEND_SUCCESS',
+            messages: [json]
+          })
+          dispatch(getInvites())
+        })
+      } else {
+        return response.json().then((json) => {
+          dispatch({
+            type: 'INVITE_RESEND_FAILURE',
+            messages: Array.isArray(json) ? json : [json]
+          })
+        })
+      }
+    })
+  }
+}
+
+export function getInvites () {
+  return (dispatch, getState) => {
+    const { auth } = getState()
+    dispatch({
+      type: 'CLEAR_MESSAGES'
+    })
+    return fetch('/api/invite', {
       method: 'get',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -67,7 +103,7 @@ export function getInviteAccept (hash) {
     dispatch({
       type: 'CLEAR_MESSAGES'
     })
-    return fetch(`/invite/accept/${hash}`, {
+    return fetch(`/api/invite/accept/${hash}`, {
       method: 'get',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -75,14 +111,15 @@ export function getInviteAccept (hash) {
       if (response.ok) {
         return response.json().then((json) => {
           dispatch({
-            type: 'INVITE_GET_SUCCESS',
-            invites: json.invites
+            type: 'INVITE_GET_ACCEPT_SUCCESS',
+            invite: json.invite
           })
+          dispatch(setActiveFleet(json.invite.fleet))
         })
       } else {
         return response.json().then((json) => {
           dispatch({
-            type: 'INVITE_GET_FAILURE',
+            type: 'INVITE_GET_ACCEPT_FAILURE',
             messages: Array.isArray(json) ? json : [json]
           })
         })
@@ -96,7 +133,7 @@ export function acceptInvite (hash) {
     dispatch({
       type: 'CLEAR_MESSAGES'
     })
-    return fetch(`/invite/accept/${hash}`, {
+    return fetch(`/api/invite/accept/${hash}`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -104,14 +141,14 @@ export function acceptInvite (hash) {
       if (response.ok) {
         return response.json().then((json) => {
           dispatch({
-            type: 'INVITE_GET_SUCCESS',
-            invites: json.invites
+            type: 'INVITE_ACCEPT_SUCCESS',
+            invite: json.invite
           })
         })
       } else {
         return response.json().then((json) => {
           dispatch({
-            type: 'INVITE_GET_FAILURE',
+            type: 'INVITE_ACCEPT_FAILURE',
             messages: Array.isArray(json) ? json : [json]
           })
         })
@@ -120,7 +157,7 @@ export function acceptInvite (hash) {
   }
 }
 
-export function cancelInvite (inviteId, fleet) {
+export function cancelInvite (inviteId) {
   return (dispatch) => {
     dispatch({
       type: 'CLEAR_MESSAGES'
@@ -136,7 +173,7 @@ export function cancelInvite (inviteId, fleet) {
             type: 'INVITE_DELETE_SUCCESS',
             messages: [json]
           })
-          dispatch(getInvites(fleet))
+          dispatch(getInvites())
         })
       } else {
         return response.json().then((json) => {

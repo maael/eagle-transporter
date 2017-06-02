@@ -1,19 +1,11 @@
-var nodemailer = require('nodemailer')
 const Invite = require('../models/Invite')
 const Fleet = require('../models/Fleet')
-var transporter = nodemailer.createTransport({
-  service: 'Mailgun',
-  auth: {
-    user: process.env.MAILGUN_USERNAME,
-    pass: process.env.MAILGUN_PASSWORD
-  }
-})
 
 /**
- * GET /invite/:fleetId
+ * GET /invite
  */
 exports.inviteGet = function (req, res) {
-  Invite.find({ fleet: { _id: req.params.id } }, function (err, invites) {
+  Invite.find({ fleet: { _id: req.user.activeFleet.id } }, function (err, invites) {
     if (err) {
       return res.status(500).send({ msg: 'There was a problem finding your invites.' })
     }
@@ -22,7 +14,7 @@ exports.inviteGet = function (req, res) {
 }
 
 /**
- * POST /invite/:fleetId
+ * POST /invite
  */
 exports.invitePost = function (req, res) {
   req.assert('email', 'Email is not valid').isEmail()
@@ -36,37 +28,40 @@ exports.invitePost = function (req, res) {
     return res.status(400).send(errors)
   }
 
-  Fleet.findById(req.params.id, (err, fleet) => {
+  Fleet.findById(req.user.activeFleet.id, (err, fleet) => {
     if (err) return res.status(400).send({ msg: 'The fleet does not exist.' })
     const invite = new Invite({
       email: req.body.email,
       fleet: fleet,
       invitee: req.body.user
     })
-
-    invite.addHash()
-
-    var mailOptions = {
-      from: 'matt@eagletransporter.com',
-      to: invite.email,
-      subject: `👋 You've been invited to join ${fleet.name} on Eagle Transporter`,
-      text: `Hey there,
-        You've been invited to join ${fleet.name} on Eagle Transporter.
-
-        Eagle Transporter's a tool to help connect events to destinations!
-
-        To accept the invite and create an account, <a href='http://localhost:4245/invite/${invite.hash}'>click here!</a>
-      `
-    }
-    console.log('sending', mailOptions)
-    // transporter.sendMail(mailOptions, (err) => {
-      // if (err) return res.status(500).send({ msg: 'There was a problem sending the invite.' })
-    invite.save((err) => {
-      console.log('saving error', err)
+    invite.send((err, invite) => {
       if (err) return res.status(500).send({ msg: 'There was a problem sending the invite.' })
       res.send({ msg: `An invite has been sent to ${invite.email}` })
     })
-    // })
+  })
+}
+
+/**
+ * GET /invite/resend
+ */
+exports.inviteResendPost = function (req, res) {
+  req.assert('id', 'The invite is not valid').notEmpty()
+
+  var errors = req.validationErrors()
+
+  if (errors) return res.status(400).send(errors)
+
+  Fleet.findById(req.user.activeFleet.id, (err, fleet) => {
+    if (err) return res.status(400).send({ msg: 'The fleet does not exist.' })
+    Invite.findOne({ _id: req.body.id, fleet: fleet._id }, (err, invite) => {
+      if (err) return res.status(500).send({ msg: 'There was a problem resending the invite.' })
+      invite = new Invite(invite)
+      invite.send((err, invite) => {
+        if (err) return res.status(500).send({ msg: 'There was a problem resending the invite.' })
+        res.send({ msg: `An invite has been sent to ${invite.email}` })
+      })
+    })
   })
 }
 
@@ -74,11 +69,11 @@ exports.invitePost = function (req, res) {
  * GET /invite/accept/:hash
  */
 exports.inviteHashGet = function (req, res) {
-  Invite.find().byHash(req.params.hash).exec(function (err, invites) {
+  Invite.find().byHash(req.params.hash).exec(function (err, invite) {
     if (err) {
       return res.status(500).send({ msg: 'There was a problem finding the invite.' })
     }
-    res.send({ invites: invites })
+    res.send({ invite: invite })
   })
 }
 
@@ -86,7 +81,8 @@ exports.inviteHashGet = function (req, res) {
  * POST /invite/accept/:hash
  */
 exports.inviteHashPost = function (req, res) {
-  Invite.accept(req.params.hash, (err, invite) => {
+  if (!req.user) return res.status(400).send({ msg: 'Must be authenticated to accept an invite.' })
+  Invite.accept(req.user, req.params.hash, (err, invite) => {
     if (err) {
       return res.status(500).send({ msg: 'There was a problem accepting the invite.' })
     }

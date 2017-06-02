@@ -1,9 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import { getActiveFleet } from '../../actions/fleet'
 import FleetIcon from '../parts/FleetIcon'
 
 class App extends React.Component {
+  componentDidMount () {
+    this.props.dispatch(getActiveFleet())
+  }
+
   renderActiveFleetItem () {
     const activeFleet = this.props.fleets && this.props.fleets.activeFleet
     if (activeFleet) {

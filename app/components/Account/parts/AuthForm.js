@@ -1,22 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { twitterLogin, googleLogin, githubLogin } from '../../../actions/oauth'
 import Messages from '../../Messages'
 import SocialAuth from './SocialAuth'
 
 class AuthForm extends React.Component {
-  handleTwitter () {
-    this.props.dispatch(twitterLogin())
-  }
-
-  handleGoogle () {
-    this.props.dispatch(googleLogin())
-  }
-
-  handleGithub () {
-    this.props.dispatch(githubLogin())
-  }
-
   render () {
     return (
       <div className='pusher column'>
@@ -35,7 +22,11 @@ class AuthForm extends React.Component {
                   </div>
                   <div className='ui segment'>
                     <div className='vertically-centered-block'>
-                      <SocialAuth />
+                      <SocialAuth
+                        handleTwitter={this.props.handleTwitter}
+                        handleGoogle={this.props.handleGoogle}
+                        handleGithub={this.props.handleGithub}
+                      />
                       <br />
                       {this.props.footer}
                     </div>

@@ -21,7 +21,8 @@ var userSchema = new mongoose.Schema({
   picture: String,
   twitter: String,
   google: String,
-  github: String
+  github: String,
+  activeFleet: { type: mongoose.Schema.ObjectId, ref: 'Fleet' }
 }, schemaOptions)
 
 userSchema.pre('save', function (next) {

@@ -3,8 +3,8 @@ import qs from 'querystring'
 import moment from 'moment'
 import cookie from 'react-cookie'
 import { browserHistory } from 'react-router'
-
-const oauthConfig = require('../config.json')[process.env.ENV || 'development']
+import { setActiveFleet } from './fleet'
+import oauthConfig from '../configure'
 
 // Sign in with Twitter
 export function twitterLogin () {
@@ -15,7 +15,7 @@ export function twitterLogin () {
   }
 
   return (dispatch) => {
-    oauth1(twitter, dispatch)
+    return oauth1(twitter, dispatch)
       .then(openPopup)
       .then(getRequestToken)
       .then(pollPopup)
@@ -38,7 +38,7 @@ export function googleLogin () {
   }
 
   return (dispatch) => {
-    oauth2(google, dispatch)
+    return oauth2(google, dispatch)
       .then(openPopup)
       .then(pollPopup)
       .then(exchangeCodeForToken)
@@ -60,7 +60,7 @@ export function githubLogin () {
   }
 
   return (dispatch) => {
-    oauth2(github, dispatch)
+    return oauth2(github, dispatch)
       .then(openPopup)
       .then(pollPopup)
       .then(exchangeCodeForToken)
@@ -247,7 +247,8 @@ function signIn ({ token, user, window, interval, dispatch }) {
       token: token,
       user: user
     })
-    cookie.save('token', token, { expires: moment().add(1, 'hour').toDate() })
+    cookie.save('token', token, Object.assign({}, oauthConfig.cookie, { expires: moment().add(1, 'hour').toDate() }))
+    if (user && user.activeFleet) dispatch(setActiveFleet(user.activeFleet))
     browserHistory.push('/')
     resolve({ window: window, interval: interval })
   })

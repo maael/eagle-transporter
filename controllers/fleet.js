@@ -13,7 +13,7 @@ exports.fleetPost = function (req, res) {
     return res.status(400).send(errors)
   }
 
-  Fleet.findOne({ name: req.body.name }, function (err, fleet) {
+  Fleet.findOne({ name: req.body.name }, (err, fleet) => {
     if (err) {
       return res.status(500).send({ msg: 'There was a problem creating this fleet.' })
     }
@@ -25,7 +25,7 @@ exports.fleetPost = function (req, res) {
       captains: [ req.user._id ],
       transporters: []
     })
-    fleet.save(function (err) {
+    fleet.save((err) => {
       if (err) return res.status(500).send({ msg: 'There was an error creating the fleet.' })
       res.send({ fleet: fleet })
     })
@@ -36,7 +36,7 @@ exports.fleetPost = function (req, res) {
  * GET /fleet
  */
 exports.fleetGet = function (req, res) {
-  Fleet.find({ captains: req.user._id }, function (err, fleets) {
+  Fleet.find({ captains: req.user._id }).exec((err, fleets) => {
     if (err) {
       return res.status(500).send({ msg: 'There was a problem finding your fleets.' })
     }

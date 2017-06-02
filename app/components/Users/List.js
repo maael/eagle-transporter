@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { sendInvite, getInvites, cancelInvite } from '../../actions/invite'
+import { sendInvite, resendInvite, getInvites, cancelInvite } from '../../actions/invite'
+import { getActiveFleet } from '../../actions/fleet'
 
 const moment = require('moment')
 
@@ -26,18 +27,24 @@ class List extends React.Component {
   }
 
   componentDidMount () {
-    this.props.dispatch(getInvites(this.props.fleets.activeFleet))
+    this.props.dispatch(getActiveFleet())
+    this.props.dispatch(getInvites())
   }
 
   sendInvite (e) {
     e.preventDefault()
-    this.props.dispatch(sendInvite(this.state.inviteEmail, this.props.user, this.props.fleets.activeFleet))
+    this.props.dispatch(sendInvite(this.state.inviteEmail, this.props.user))
     this.setState({ inviteEmail: '' })
+  }
+
+  resendInvite (id, e) {
+    e.preventDefault()
+    this.props.dispatch(resendInvite(id))
   }
 
   cancelInvite (id, e) {
     e.preventDefault()
-    this.props.dispatch(cancelInvite(id, this.props.fleets.activeFleet))
+    this.props.dispatch(cancelInvite(id))
   }
 
   render () {
@@ -66,7 +73,7 @@ class List extends React.Component {
                   </div>
                   <div className='extra content'>
                     <div className='ui two buttons'>
-                      <div className='ui basic green button'>Resend</div>
+                      <div className='ui basic green button' onClick={this.resendInvite.bind(this, invite._id)}>Resend</div>
                       <div className='ui basic red button' onClick={this.cancelInvite.bind(this, invite._id)}>Cancel</div>
                     </div>
                   </div>
@@ -78,7 +85,27 @@ class List extends React.Component {
             <h3 className='left floated' style={{ float: 'left' }}>Current Captains</h3>
           </div>
           <div className='ui segment'>
-            {this.props.fleets.activeFleet ? this.props.fleets.activeFleet.captains.map((captain, i) => <div key={i}>{captain}</div>) : ''}
+            <div className='ui centered stackable cards'>
+              {this.props.fleets.activeFleet ? this.props.fleets.activeFleet.captains.map((captain, i) => (
+                <div key={i} className='card'>
+                  <div className='content'>
+                    <img className='right floated mini ui image' src={captain.picture || captain.gravatar} />
+                    <div className='header'>
+                      {captain.name}
+                    </div>
+                    <div className='meta'>
+                      {captain.email ? (<i className='icon mail' />) : ''}
+                      {captain.twitter ? (<i className='icon twitter' />) : ''}
+                      {captain.github ? (<i className='icon github' />) : ''}
+                      {captain.google ? (<i className='icon google plus' />) : ''}
+                    </div>
+                    <div className='description'>
+                      {captain.email}
+                    </div>
+                  </div>
+                </div>
+              )) : ''}
+            </div>
           </div>
         </div>
       </div>

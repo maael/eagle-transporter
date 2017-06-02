@@ -12,9 +12,14 @@ export default function messages (state = {}, action) {
     case 'LINK_FAILURE':
     case 'FLEET_CREATE_FAILURE':
     case 'FLEET_GET_FAILURE':
+    case 'FLEET_SET_ACTIVE_FAILURE':
+    case 'FLEET_GET_ACTIVE_SUCCESS':
     case 'INVITE_SEND_FAILURE':
+    case 'INVITE_RESEND_FAILURE':
     case 'INVITE_GET_FAILURE':
     case 'INVITE_DELETE_FAILURE':
+    case 'INVITE_GET_ACCEPT_FAILURE':
+    case 'INVITE_ACCEPT_FAILURE':
       return {
         error: action.messages
       }
@@ -24,9 +29,14 @@ export default function messages (state = {}, action) {
     case 'CONTACT_FORM_SUCCESS':
     case 'FLEET_CREATE_SUCCESS':
     case 'FLEET_GET_SUCCESS':
+    case 'FLEET_SET_ACTIVE_SUCCESS':
+    case 'FLEET_GET_ACTIVE_SUCCESS':
     case 'INVITE_SEND_SUCCESS':
+    case 'INVITE_RESEND_SUCCESS':
     case 'INVITE_GET_SUCCESS':
     case 'INVITE_DELETE_SUCCESS':
+    case 'INVITE_GET_ACCEPT_SUCCESS':
+    case 'INVITE_ACCEPT_SUCCESS':
       return {
         success: action.messages
       }

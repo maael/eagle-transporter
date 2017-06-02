@@ -78,7 +78,7 @@ app.use(lessMiddleware(path.join(__dirname, 'src'), {
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/themes/default/assets/fonts', express.static(path.join(semanticPath, 'themes', 'default', 'assets', 'fonts')))
 
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   req.isAuthenticated = function () {
     var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token
     try {
@@ -90,7 +90,8 @@ app.use(function (req, res, next) {
 
   if (req.isAuthenticated()) {
     var payload = req.isAuthenticated()
-    User.findById(payload.sub, function (err, user) {
+    User.findById(payload.sub).populate({ path: 'activeFleet', populate: { path: 'captains', model: 'User' }}).exec((err, user) => {
+      console.log('USER', user)
       if (err) return next()
       req.user = user
       next()
@@ -116,25 +117,30 @@ app.post('/auth/github', userController.authGithub)
 app.get('/auth/github/callback', userController.authGithubCallback)
 app.get('/auth/github/callback', userController.authGithubCallback)
 
+app.get('/api/account/active-fleet', userController.ensureAuthenticated, userController.activeFleetGet)
+app.post('/api/account/active-fleet', userController.ensureAuthenticated, userController.activeFleetPost)
+
 app.get('/api/fleet', userController.ensureAuthenticated, fleetController.fleetGet)
 app.post('/api/fleet', userController.ensureAuthenticated, fleetController.fleetPost)
 
-app.get('/api/invite/:id', userController.ensureAuthenticated, inviteController.inviteGet)
-app.post('/api/invite/:id', userController.ensureAuthenticated, inviteController.invitePost)
+app.post('/api/invite/resend', userController.ensureAuthenticated, inviteController.inviteResendPost)
 app.get('/api/invite/accept/:hash', inviteController.inviteHashGet)
-app.get('/api/invite/accept/:hash', inviteController.inviteHashPost)
+app.post('/api/invite/accept/:hash', userController.ensureAuthenticated, inviteController.inviteHashPost)
+app.get('/api/invite', userController.ensureAuthenticated, inviteController.inviteGet)
+app.post('/api/invite', userController.ensureAuthenticated, inviteController.invitePost)
 app.delete('/api/invite/:id', userController.ensureAuthenticated, inviteController.inviteDelete)
 
 // React server rendering
-app.use(function (req, res) {
+app.use((req, res) => {
   var initialState = {
     auth: { token: req.cookies.token, user: req.user },
-    messages: {}
+    messages: {},
+    fleets: { activeFleets: req.user && req.user.activeFleets ? req.user.activeFleets : {} }
   }
 
   var store = configureStore(initialState)
 
-  Router.match({ routes: routes.default(store), location: req.url }, function (err, redirectLocation, renderProps) {
+  Router.match({ routes: routes.default(store), location: req.url }, (err, redirectLocation, renderProps) => {
     if (err) {
       res.status(500).send(err.message)
     } else if (redirectLocation) {
@@ -155,13 +161,13 @@ app.use(function (req, res) {
 
 // Production error handler
 if (app.get('env') === 'production') {
-  app.use(function (err, req, res, next) {
+  app.use((err, req, res, next) => {
     console.error(err.stack)
     res.sendStatus(err.status || 500)
   })
 }
 
-app.listen(app.get('port'), function () {
+app.listen(app.get('port'), () => {
   app.logger.info('Express server listening on port ' + app.get('port'))
 })
 

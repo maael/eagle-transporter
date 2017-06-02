@@ -12,7 +12,7 @@
     "test:server": "mocha test/server --recursive --compilers js:babel-register",
     "watch": "npm-run-all --parallel watch:*",
     "watch:js": "watchify app/main.js -t [ babelify --presets [es2015 react] ] -v -o public/js/bundle.js",
-    "lint": "standard --fix"
+    "lint": "standard"
   },
   "dependencies": {
     "@maael/express-bunyan": "^1.0.0",
@@ -40,7 +40,7 @@
     "jsonwebtoken": "^5.7.0",
     "less-middleware": "^2.2.0",
     "moment": "^2.12.0",
-    "mongoose": "^4.4.8",
+    "mongoose": "^4.10.4",
     "nodemailer": "^2.3.0",
     "nodemon": "^1.9.1",
     "npm-run-all": "^1.8.0",

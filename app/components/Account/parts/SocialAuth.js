@@ -4,15 +4,27 @@ import { twitterLogin, googleLogin, githubLogin } from '../../../actions/oauth'
 
 class SocialAuth extends React.Component {
   handleTwitter () {
-    this.props.dispatch(twitterLogin())
+    if (this.props.handleTwitter) {
+      this.props.handleTwitter()
+    } else {
+      this.props.dispatch(twitterLogin())
+    }
   }
 
   handleGoogle () {
-    this.props.dispatch(googleLogin())
+    if (this.props.handleGoogle) {
+      this.props.handleGoogle()
+    } else {
+      this.props.dispatch(googleLogin())
+    }
   }
 
   handleGithub () {
-    this.props.dispatch(githubLogin())
+    if (this.props.handleGithub) {
+      this.props.handleGithub()
+    } else {
+      this.props.dispatch(githubLogin())
+    }
   }
 
   render () {

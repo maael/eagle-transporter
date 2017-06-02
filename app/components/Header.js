@@ -13,8 +13,8 @@ class Header extends React.Component {
     const rightNav = this.props.token ? (
       <div className='right item'>
         <Link to='/account' className='ui black label'>
-          <img className='ui right spaced avatar image' src={this.props.user.picture || this.props.user.gravatar} />
-          {' '}{this.props.user.name || this.props.user.email || this.props.user.id}{' '}
+          <img className='ui right spaced avatar image' src={this.props.user ? (this.props.user.picture || this.props.user.gravatar) : ''} />
+          {' '}{this.props.user ? (this.props.user.name || this.props.user.email || this.props.user.id) : ''}{' '}
         </Link>
         <Link to='/fleets' className='ui inverted button'>Launch App</Link>
         <Link to='/account' className='ui inverted button'>My Account</Link>
