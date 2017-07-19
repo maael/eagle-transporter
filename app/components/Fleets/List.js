@@ -104,7 +104,6 @@ class List extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('STATE', state)
   return {
     user: state.auth.user,
     fleets: state.fleets

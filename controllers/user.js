@@ -51,12 +51,12 @@ exports.loginPost = function (req, res, next) {
         'Double-check your email address and try again.'
       })
     }
-    user.comparePassword(req.body.password, function (err, isMatch) {
+    user.comparePassword(req.body.password, (err, isMatch) => {
       if (!isMatch) {
         return res.status(401).send({ msg: 'Invalid email or password' })
       }
       if (err) return res.status(500).send({ msg: 'There was an error logging in.' })
-      res.send({ token: generateToken(user), user: user.toJSON() })
+      res.send({ token: generateToken(user), user: user.toJSON({ virtuals: true }) })
     })
   })
 }
@@ -88,7 +88,7 @@ exports.signupPost = function (req, res, next) {
     })
     user.save((err) => {
       if (err) return res.status(500).send({ msg: 'There was an error creating your account.' })
-      res.send({ token: generateToken(user), user: user })
+      res.send({ token: generateToken(user), user: user.toJSON({ virtuals: true }) })
     })
   })
 }
@@ -122,7 +122,7 @@ exports.accountPut = function (req, res, next) {
       user.name = req.body.name
       user.location = req.body.location
     }
-    user.save(function (err) {
+    user.save((err) => {
       if (err) return res.status(500).send({ msg: 'There was an error updating your account.' })
       if ('password' in req.body) {
         res.send({ msg: 'Your password has been changed.' })
@@ -139,7 +139,7 @@ exports.accountPut = function (req, res, next) {
  * DELETE /account
  */
 exports.accountDelete = function (req, res, next) {
-  User.remove({ _id: req.user.id }, function (err) {
+  User.remove({ _id: req.user.id }, (err) => {
     res.send({ msg: 'Your account has been permanently deleted.' })
   })
 }
@@ -148,7 +148,7 @@ exports.accountDelete = function (req, res, next) {
  * GET /unlink/:provider
  */
 exports.unlink = function (req, res, next) {
-  User.findById(req.user.id, function (err, user) {
+  User.findById(req.user.id, (err, user) => {
     switch (req.params.provider) {
       case 'google':
         user.google = undefined
@@ -162,7 +162,7 @@ exports.unlink = function (req, res, next) {
       default:
         return res.status(400).send({ msg: 'Invalid OAuth Provider' })
     }
-    user.save(function (err) {
+    user.save((err) => {
       if (err) return res.status(500).send({ msg: 'There was an error unlinking your account.' })
       res.send({ msg: 'Your account has been unlinked.' })
     })
@@ -184,14 +184,14 @@ exports.forgotPost = function (req, res, next) {
   }
 
   async.waterfall([
-    function (done) {
-      crypto.randomBytes(16, function (err, buf) {
+    (done) => {
+      crypto.randomBytes(16, (err, buf) => {
         var token = buf.toString('hex')
         done(err, token)
       })
     },
-    function (token, done) {
-      User.findOne({ email: req.body.email }, function (err, user) {
+    (token, done) => {
+      User.findOne({ email: req.body.email }, (err, user) => {
         if (!user) {
           return res.status(400).send({ msg: 'The email address ' + req.body.email + ' is not associated with any account.' })
         }
@@ -203,7 +203,7 @@ exports.forgotPost = function (req, res, next) {
         })
       })
     },
-    function (token, user, done) {
+    (token, user, done) => {
       var transporter = nodemailer.createTransport({
         service: 'Mailgun',
         auth: {
@@ -220,7 +220,7 @@ exports.forgotPost = function (req, res, next) {
         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       }
-      transporter.sendMail(mailOptions, function (err) {
+      transporter.sendMail(mailOptions, (err) => {
         res.send({ msg: 'An email has been sent to ' + user.email + ' with further instructions.' })
         done(err)
       })
@@ -242,22 +242,22 @@ exports.resetPost = function (req, res, next) {
   }
 
   async.waterfall([
-    function (done) {
+    (done) => {
       User.findOne({ passwordResetToken: req.params.token })
         .where('passwordResetExpires').gt(Date.now())
-        .exec(function (err, user) {
+        .exec((err, user) => {
           if (!user) {
             return res.status(400).send({ msg: 'Password reset token is invalid or has expired.' })
           }
           user.password = req.body.password
           user.passwordResetToken = undefined
           user.passwordResetExpires = undefined
-          user.save(function (err) {
+          user.save((err) => {
             done(err, user)
           })
         })
     },
-    function (user, done) {
+    (user, done) => {
       var transporter = nodemailer.createTransport({
         service: 'Mailgun',
         auth: {
@@ -272,7 +272,7 @@ exports.resetPost = function (req, res, next) {
         text: 'Hello,\n\n' +
         'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       }
-      transporter.sendMail(mailOptions, function (err) {
+      transporter.sendMail(mailOptions, (err) => {
         if (err) return res.status(500).send({ msg: 'There was an error resetting your password.' })
         res.send({ msg: 'Your password has been changed successfully.' })
       })
@@ -296,12 +296,12 @@ exports.authGoogle = function (req, res) {
   }
 
   // Step 1. Exchange authorization code for access token.
-  request.post(accessTokenUrl, { json: true, form: params }, function (err, response, token) {
+  request.post(accessTokenUrl, { json: true, form: params }, (err, response, token) => {
     var accessToken = token.access_token
     var headers = { Authorization: 'Bearer ' + accessToken }
 
     // Step 2. Retrieve user's profile information.
-    request.get({ url: peopleApiUrl, headers: headers, json: true }, function (err, response, profile) {
+    request.get({ url: peopleApiUrl, headers: headers, json: true }, (err, response, profile) => {
       if (profile.error) {
         return res.status(500).send({ message: profile.error.message })
       }
@@ -317,7 +317,7 @@ exports.authGoogle = function (req, res) {
           user.location = user.location || profile.location
           user.google = profile.sub
           user.save(function () {
-            res.send({ token: generateToken(user), user: user })
+            res.send({ token: generateToken(user), user: user.toJSON({ virtuals: true }) })
           })
         })
       } else {
@@ -333,8 +333,8 @@ exports.authGoogle = function (req, res) {
             location: profile.location,
             google: profile.sub
           })
-          user.save(function (err) {
-            res.send({ token: generateToken(user), user: user })
+          user.save((err) => {
+            res.send({ token: generateToken(user), user: user.toJSON({ virtuals: true }) })
           })
         })
       }
@@ -364,7 +364,7 @@ exports.authTwitter = function (req, res) {
 
     // Step 1. Obtain request token to initiate app authorization.
     // At this point nothing is happening inside a popup yet.
-    request.post({ url: requestTokenUrl, oauth: requestTokenOauthSignature }, function (err, response, body) {
+    request.post({ url: requestTokenUrl, oauth: requestTokenOauthSignature }, (err, response, body) => {
       var oauthToken = qs.parse(body)
 
       // Step 2. Send OAuth token back.
@@ -383,7 +383,7 @@ exports.authTwitter = function (req, res) {
     }
 
     // Step 3. Exchange "oauth token" and "oauth verifier" for access token.
-    request.post({ url: accessTokenUrl, oauth: accessTokenOauth }, function (err, response, accessToken) {
+    request.post({ url: accessTokenUrl, oauth: accessTokenOauth }, (err, response, accessToken) => {
       accessToken = qs.parse(accessToken)
 
       var profileOauth = {
@@ -393,7 +393,7 @@ exports.authTwitter = function (req, res) {
       }
 
       // Step 4. Retrieve user's profile information.
-      request.get({ url: profileUrl + accessToken.screen_name, oauth: profileOauth, json: true }, function (err, response, profile) {
+      request.get({ url: profileUrl + accessToken.screen_name, oauth: profileOauth, json: true }, (err, response, profile) => {
         // Step 5a. Link accounts if user is authenticated.
         if (req.isAuthenticated()) {
           User.findOne({ twitter: profile.id }).populate('activeFleet').exec((err, user) => {
@@ -405,8 +405,8 @@ exports.authTwitter = function (req, res) {
             user.picture = user.picture || profile.profile_image_url_https
             user.location = user.location || profile.location
             user.twitter = profile.id
-            user.save(function (err) {
-              res.send({ token: generateToken(user), user: user })
+            user.save((err) => {
+              res.send({ token: generateToken(user), user: user.toJSON({ virtuals: true }) })
             })
           })
         } else {
@@ -424,8 +424,8 @@ exports.authTwitter = function (req, res) {
               picture: profile.profile_image_url_https,
               twitter: profile.id
             })
-            user.save(function () {
-              res.send({ token: generateToken(user), user: user })
+            user.save(() => {
+              res.send({ token: generateToken(user), user: user.toJSON({ virtuals: true }) })
             })
           })
         }
@@ -454,14 +454,14 @@ exports.authGithub = function (req, res) {
   }
 
   // Step 1. Exchange authorization code for access token.
-  request.post(accessTokenUrl, { json: true, form: params }, function (err, response, token) {
+  request.post(accessTokenUrl, { json: true, form: params }, (err, response, token) => {
     var accessToken = token.access_token
     var headers = {
       Authorization: 'Bearer ' + accessToken,
       'User-Agent': 'MegaBoilerplate'
     }
     // Step 2. Retrieve user's profile information.
-    request.get({ url: userUrl, headers: headers, json: true }, function (err, response, profile) {
+    request.get({ url: userUrl, headers: headers, json: true }, (err, response, profile) => {
       if (profile.error) {
         return res.status(500).send({ message: profile.error.message })
       }
@@ -476,8 +476,8 @@ exports.authGithub = function (req, res) {
           user.picture = user.picture || profile.avatar_url
           user.location = user.location || profile.location
           user.github = profile.id
-          user.save(function () {
-            res.send({ token: generateToken(user), user: user })
+          user.save(() => {
+            res.send({ token: generateToken(user), user: user.toJSON({ virtuals: true }) })
           })
         })
       } else {
@@ -493,8 +493,8 @@ exports.authGithub = function (req, res) {
             location: profile.location,
             github: profile.id
           })
-          user.save(function (err) {
-            res.send({ token: generateToken(user), user: user })
+          user.save((err) => {
+            res.send({ token: generateToken(user), user: user.toJSON({ virtuals: true }) })
           })
         })
       }
@@ -527,6 +527,6 @@ exports.activeFleetPost = function (req, res) {
   user.activeFleet = req.body.id
   user.save((err) => {
     if (err) return res.status(500).send({ msg: 'There was a problem setting the active fleet.' })
-    return res.send({ user: user })
+    return res.send({ user: user.toJSON() })
   })
 }

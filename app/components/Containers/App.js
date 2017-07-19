@@ -23,16 +23,28 @@ class App extends React.Component {
   }
 
   render () {
+    console.log('pls', this.props.user)
     return (
-      <div className='ui grid hero-stars' style={{ height: '100%' }}>
+      <div className='ui grid hero-stars pushable' style={{ height: '100%' }}>
         <div className='stars' />
         <div className='twinkling' />
+        <div className='tablet only mobile only row' style={{ color: 'white' }}>
+            <a className="button">
+              <i className="sidebar icon"></i>
+              Menu
+            </a>
+        </div>
         <div className='row'>
-          <div className='column three wide'>
-            <div className='ui left vertical inverted sidebar visible menu'>
-              <Link to='/account' className='item'>
+          <div className='three wide computer only column'>
+            <div className='ui left vertical inverted sidebar desktop-visible menu' style={{ position: 'fixed', top: 0 }}>
+              <Link to='/account' className='item height-corrected'>
                 <img className='ui right spaced avatar image' src={this.props.user.picture || this.props.user.gravatar} />
+                <i className='block log out icon' />
                 {' '}{this.props.user.name || this.props.user.email || this.props.user.id}{' '}
+              </Link>
+              <Link to='/dashboard' className='item'>
+                <i className='block dashboard icon' />
+                Dashboard
               </Link>
               <Link to='/fleets' className='item'>
                 <i className='block layout icon' />
@@ -69,11 +81,17 @@ class App extends React.Component {
                     Destinations
                   </Link>
                   ) : null}
+                  {this.props.fleets && this.props.fleets.activeFleet ? (
+                    <Link to='/routes' className='item'>
+                      <i className='road icon' />
+                    Routes
+                  </Link>
+                  ) : null}
                 </div>
               </div>
             </div>
           </div>
-          <div className='column thirteen wide'>
+          <div className='sixteen wide mobile sixteen wide tablet thirteen wide computer column pusher'>
             {this.props.children}
           </div>
         </div>

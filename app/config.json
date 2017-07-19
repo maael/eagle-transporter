@@ -1,6 +1,7 @@
 {
   "development": {
     "url": "http://localhost:4245",
+    "localUrl": "http://localhost:4245",
     "auth": {
       "google": {
         "clientId": "474535843989-g6pfo1tjvn88nftm35o39j47tn50ff3p.apps.googleusercontent.com"
@@ -15,6 +16,7 @@
   },
   "production": {
     "url": "http://eagle.maelphick.com",
+    "localUrl": "http://localhost:4245",
     "auth": {
       "google": {
         "clientId": "766582048072-kvh8rngnpirp2lfjlpei7pea6us8j2nb.apps.googleusercontent.com"

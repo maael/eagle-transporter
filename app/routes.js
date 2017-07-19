@@ -15,6 +15,7 @@ import AppContainer from './components/Containers/App'
 import FleetsList from './components/Fleets/List'
 import FleetsCreate from './components/Fleets/Create'
 import UsersList from './components/Users/List'
+import RouteCreate from './components/Routes/Create'
 
 export default function getRoutes (store) {
   const ensureAuthenticated = (nextState, replace) => {
@@ -25,6 +26,11 @@ export default function getRoutes (store) {
   const skipIfAuthenticated = (nextState, replace) => {
     if (store.getState().auth.token) {
       replace('/')
+    }
+  }
+  const appRedirectIfAuthenticated = (nextState, replace) => {
+    if (store.getState().auth.token) {
+      replace('/dashboard')
     }
   }
   const ensureFleet = (nextState, replace) => {
@@ -41,7 +47,7 @@ export default function getRoutes (store) {
     <Route>
       <Route path='/'>
         <Route component={App}>
-          <IndexRoute component={Home} onLeave={clearMessages} />
+          <IndexRoute component={Home} onEnter={appRedirectIfAuthenticated} onLeave={clearMessages} />
           <Route path='/contact' component={Contact} onLeave={clearMessages} />
           <Route path='/login' component={Login} onEnter={skipIfAuthenticated} onLeave={clearMessages} />
           <Route path='/signup' component={Signup} onEnter={skipIfAuthenticated} onLeave={clearMessages} />
@@ -51,6 +57,9 @@ export default function getRoutes (store) {
           <Route path='/invite/:hash' component={Invite} onLeave={clearMessages} />
         </Route>
         <Route component={AppContainer} onEnter={ensureAuthenticated}>
+          <Route path='/dashboard' onEnter={ensureFleet}>
+            <IndexRoute component={FleetsList} onLeave={clearMessages} />
+          </Route>
           <Route path='/fleets'>
             <IndexRoute component={FleetsList} onLeave={clearMessages} />
             <Route path='/fleets/launch' component={FleetsCreate} onLeave={clearMessages} />
@@ -60,6 +69,9 @@ export default function getRoutes (store) {
           </Route>
           <Route path='/transporters' onEnter={ensureFleet}>
             <IndexRoute component={TransportersList} onLeave={clearMessages} />
+          </Route>
+          <Route path='/routes' onEnter={ensureFleet}>
+            <IndexRoute component={RouteCreate} onLeave={clearMessages} />
           </Route>
         </Route>
       </Route>

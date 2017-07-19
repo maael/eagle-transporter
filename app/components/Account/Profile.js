@@ -10,7 +10,7 @@ class Profile extends React.Component {
     this.state = {
       email: props.user.email,
       name: props.user.name,
-      location: props.user.location,
+      location: props.user.location || '',
       gravatar: props.user.gravatar,
       password: '',
       confirm: ''

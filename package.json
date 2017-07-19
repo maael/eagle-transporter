@@ -31,6 +31,7 @@
     "compression": "^1.6.2",
     "cookie-parser": "^1.4.1",
     "dotenv": "^2.0.0",
+    "draft-js": "^0.10.1",
     "envify": "^4.0.0",
     "express": "^4.13.4",
     "express-validator": "^2.20.4",
@@ -56,6 +57,8 @@
     "redux-thunk": "^2.0.1",
     "request": "^2.69.0",
     "semantic-ui-less": "^2.2.10",
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3",
     "stream-to-array": "^2.3.0",
     "watchify": "^3.7.0",
     "whatwg-fetch": "^0.11.0"

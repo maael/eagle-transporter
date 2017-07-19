@@ -61,3 +61,18 @@
   color: #FFFFFF;
   text-align: center;
 }
+
+.desktop-visible {
+  display: none;
+}
+
+@media (min-width: 800px) {
+  .ui.desktop-visible.sidebar {
+    visibility: visible;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.item.height-corrected {
+  line-height: 2em !important;
+}

@@ -1,18 +1,19 @@
 const createLogger = require('@maael/express-bunyan')
-var express = require('express')
-var path = require('path')
-var compression = require('compression')
-var cookieParser = require('cookie-parser')
-var bodyParser = require('body-parser')
-var expressValidator = require('express-validator')
-var dotenv = require('dotenv')
-var React = require('react')
-var ReactDOM = require('react-dom/server')
-var Router = require('react-router')
-var Provider = require('react-redux').Provider
-var mongoose = require('mongoose')
-var jwt = require('jsonwebtoken')
-var lessMiddleware = require('less-middleware')
+const express = require('express')
+const path = require('path')
+const compression = require('compression')
+const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
+const expressValidator = require('express-validator')
+const dotenv = require('dotenv')
+const React = require('react')
+const ReactDOM = require('react-dom/server')
+const Router = require('react-router')
+const Provider = require('react-redux').Provider
+const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+const lessMiddleware = require('less-middleware')
+const socket = require('./io')
 
 // Load environment variables from .env file
 dotenv.load()
@@ -69,7 +70,7 @@ app.use(lessMiddleware(path.join(__dirname, 'src'), {
   dest: path.join(__dirname, 'public'),
   debug: process.env.ENV !== 'production',
   once: process.env.ENV === 'production',
-    // force: process.env.ENV !== 'production',
+  force: process.env.ENV !== 'production',
   render: {
     yuicompress: process.env.ENV === 'production',
     paths: [ semanticPath ]
@@ -87,20 +88,40 @@ app.use((req, res, next) => {
       return false
     }
   }
-
   if (req.isAuthenticated()) {
     var payload = req.isAuthenticated()
     User
       .findById(payload.sub)
       .populate({ path: 'activeFleet', populate: { path: 'captains', model: 'User' } })
       .exec((err, user) => {
-        console.log('USER', user)
         if (err) return next()
+        console.log('setting user', user)
         req.user = user
         next()
       })
   } else {
     next()
+  }
+})
+
+let io
+
+app.get('/blueprint/:id', (req, res) => {
+  console.log('current io', io)
+  if (io) {
+    console.log('current io blueprints')
+    if (io.blueprints) {
+      if (io.blueprints.indexOf(req.params.id) > -1) {
+        io.io.sockets.sockets[req.params.id].emit('server:hitBlueprintUrl', { test: 'data', please: { work: 'if you could' } })
+        res.status(200).send({ success: true, blueprint: { id: req.params.id } })
+      } else {
+        res.status(400).send({ error: 'The blueprint could not be found' })
+      }
+    } else {
+      res.status(400).send({ error: 'The blueprint could not be found' })
+    }
+  } else {
+    res.status(500).send({ error: 'The server is not ready to accept requests' })
   }
 })
 
@@ -170,8 +191,10 @@ if (app.get('env') === 'production') {
   })
 }
 
-app.listen(app.get('port'), () => {
+const server = app.listen(app.get('port'), () => {
   app.logger.info('Express server listening on port ' + app.get('port'))
 })
+
+io = socket(server)
 
 module.exports = app

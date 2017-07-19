@@ -10,6 +10,7 @@ class Header extends React.Component {
   }
 
   render () {
+    console.log('USER', this.props.user)
     const rightNav = this.props.token ? (
       <div className='right item'>
         <Link to='/account' className='ui black label'>
